@@ -58,12 +58,12 @@ class ConsoleApp {
     - Scanner current
     - IGameList gameList
     - IPlanner planner
-    + ConsoleApp(IGameList gameList, IPlanner planner)
+    + ConsoleApp(gameList : IGameList, planner : IPlanner)
     + start() : void
     - randomNumber() : void
     - randomNumber() : void
     - processFilter() : void
-    - printFilterStream(Stream<BoardGame> games, GameData sortON) : void
+    - printFilterStream(games : Stream<BoardGame> , sortON : GameData) : void
     - processListCommands() : void
     - printCurrentList() : void
     - nextCommand() : ConsoleText
@@ -72,7 +72,7 @@ class ConsoleApp {
     - printOutput(String format, Object... output) : void
 }
 
-class "ConsoleApp::ConsoleText" as ConsoleText <<enumeration>> {
+class ConsoleText <<enumeration>> {
     <<enumeration>>
     + WELCOME
     + HELP
