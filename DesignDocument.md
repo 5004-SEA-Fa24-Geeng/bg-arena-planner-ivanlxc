@@ -194,19 +194,19 @@ class IGameList {
 
 
 
-GameList  ..>  IGameList 
-Planner  ..>  IPlanner 
+GameList  ..>  IGameList : is-a
+Planner  ..>  IPlanner : is-a
 
 
-BGArenaPlanner -- uses --> IPlanner
-BGArenaPlanner -- uses --> IGameList
-BGArenaPlanner -- uses --> GamesLoader
+BGArenaPlanner --> IPlanner
+BGArenaPlanner --> IGameList
+BGArenaPlanner --> GamesLoader
 
-ConsoleApp -- uses --> IGameList
-ConsoleApp -- uses --> IPlanner
+ConsoleApp --> IGameList
+ConsoleApp --> IPlanner
 
-Planner -- uses --> BoardGame
-GamesLoader -- uses --> BoardGame
+Planner --> BoardGame
+GamesLoader --> BoardGame
 
 ```
 
