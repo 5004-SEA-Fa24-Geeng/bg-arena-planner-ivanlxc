@@ -41,7 +41,7 @@ class BoardGame{
     + getMinPlayTime() : int
     + getDifficulty() : double
     + getRank() : int
-    + getRating : double
+    + getRating() : double
     + getYearPublished() : int
     + toStringWithInfo(GameData col) : String
     + toString() : String
@@ -61,7 +61,7 @@ class ConsoleApp {
     + ConsoleApp(gameList : IGameList, planner : IPlanner)
     + start() : void
     - randomNumber() : void
-    - randomNumber() : void
+    - processHelp() : void
     - processFilter() : void
     - printFilterStream(games : Stream<BoardGame> , sortON : GameData) : void
     - processListCommands() : void
@@ -114,7 +114,7 @@ class GameData {
     + DIFFICULTY
     + RANK
     + MIN_PLAYERS
-    + AX_PLAYERS
+    + MAX_PLAYERS
     + MIN_TIME
     + MAX_TIME
     + YEAR
@@ -149,8 +149,8 @@ class GamesLoader {
 class IPlanner {
     <<Interface>>
     + filter(filter : String) : Stream<BoardGame>
-    + filter(filter : String, sortOn GameData) : Stream<BoardGame>
-    + filter(filter : String, sortOn GameData, ascending : boolean) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData, ascending : boolean) : Stream<BoardGame>
     + reset() : void
 }
 
@@ -189,7 +189,7 @@ class IGameList {
     + count() : int
     + saveGame(filename : String) : void
     + addToList(str : String, filtered : Stream<BoardGame>) : void
-    + removeFromList (str : String)
+    + removeFromList (str : String) : void
 }
 
 
