@@ -14,25 +14,24 @@ Provide a class diagram for the provided code as you read through it.  For the c
 
 ```mermaid
 classDiagram
-class BGArenaPlanner{
-    - String DEFAULT_COLLECTION
+class BGArenaPlanner {
+    - DEFAULT_COLLECTION : String
     - BGArenaPlanner()
-    + main(String[] args): void
+    + main(String[] args) : void
 }
 
-class BoardGame{
-    - String name
-    - int id
-    - int minPlayers
-    - int maxPlayers
-    - int maxPlayTime
-    - int minPlayTime
-    - double difficulty
-    - int rank
-    - double averageRating
-    - int yearPublished
-    + BoardGame(String name, int id, int minPlayers, int maxPlayers, int minPlayTime,
-            int maxPlayTime, double difficulty, int rank, double averageRating, int yearPublished)
+class BoardGame {
+    - name : String
+    - id : int
+    - minPlayers : int
+    - maxPlayers : int
+    - maxPlayTime : int
+    - minPlayTime : int
+    - difficulty : double
+    - rank : int
+    - averageRating : double
+    - yearPublished : int
+    + BoardGame(String name, int id, int minPlayers, int maxPlayers, int minPlayTime, int maxPlayTime, double difficulty, int rank, double averageRating, int yearPublished)
     + getName() : String
     + getId() : int
     + getMinPlayers() : int
@@ -43,33 +42,32 @@ class BoardGame{
     + getRank() : int
     + getRating() : double
     + getYearPublished() : int
-    + toStringWithInfo(GameData col) : String
+    + toStringWithInfo(col : GameData) : String
     + toString() : String
-    + equals(Object obj) : boolean
+    + equals(obj : Object) : boolean
     + hashCode() : int
-    + main(String[] args) : void   
+    + main(args : String[]) : void
 }
 
-
 class ConsoleApp {
-    - Scanner IN
-    - String DEFAULT_FILENAME
-    - Random RND
-    - Scanner current
-    - IGameList gameList
-    - IPlanner planner
+    - IN : Scanner
+    - DEFAULT_FILENAME : String
+    - RND : Random
+    - current : Scanner
+    - gameList : IGameList
+    - planner : IPlanner
     + ConsoleApp(gameList : IGameList, planner : IPlanner)
     + start() : void
     - randomNumber() : void
     - processHelp() : void
     - processFilter() : void
-    - printFilterStream(games : Stream<BoardGame> , sortON : GameData) : void
+    - printFilterStream(games : Stream<BoardGame>, sortOn : GameData) : void
     - processListCommands() : void
     - printCurrentList() : void
     - nextCommand() : ConsoleText
     - remainder() : String
-    - getInput(String format, Object... args) : String
-    - printOutput(String format, Object... output) : void
+    - getInput(format : String, args : Object...) : String
+    - printOutput(format : String, output : Object...) : void
 }
 
 class ConsoleText {
@@ -83,7 +81,7 @@ class ConsoleText {
     + NO_GAMES_LIST
     + FILTERED_CLEAR
     + LIST_HELP
-    + FILTER_HELP   
+    + FILTER_HELP
     + INVALID_LIST
     + EASTER_EGG
     + CMD_EASTER_EGG
@@ -101,10 +99,9 @@ class ConsoleText {
     + CMD_SORT_OPTION
     + CMD_SORT_OPTION_DIRECTION_ASC
     + CMD_SORT_OPTION_DIRECTION_DESC
-    + toString(): String
-    + fromString(str: String): ConsoleText
+    + toString() : String
+    + fromString(str : String) : ConsoleText
 }
-
 
 class GameData {
     <<enumeration>>
@@ -118,33 +115,30 @@ class GameData {
     + MIN_TIME
     + MAX_TIME
     + YEAR
-    - String columnName
+    - columnName : String
     - GameData(columnName : String)
     + getColumnName() : String
     + fromColumnName(columnName : String) : GameData
     + fromString(name : String) : GameData
 }
-    
 
 class GameList {
     + GameList()
     + getGameNames() : List<String>
-    + clear(): void
-    + count(): int
-    + saveGame(filename: String): void
-    + addToList(str: String, filtered: Stream<BoardGame>): void
-    + removeFromList(str: String): void
+    + clear() : void
+    + count() : int
+    + saveGame(filename : String) : void
+    + addToList(str : String, filtered : Stream<BoardGame>) : void
+    + removeFromList(str : String) : void
 }
 
-
 class GamesLoader {
-    - String DELIMITER
+    - DELIMITER : String
     - GamesLoader()
-    + loadGamesFile(filename : String ) : Set<BoardGame>
+    + loadGamesFile(filename : String) : Set<BoardGame>
     - toBoardGame(line : String, columnMap : Map<GameData, Integer>) : BoardGame
     - processHeader(header : String) : Map<GameData, Integer>
 }
-
 
 class IPlanner {
     <<Interface>>
@@ -153,7 +147,6 @@ class IPlanner {
     + filter(filter : String, sortOn : GameData, ascending : boolean) : Stream<BoardGame>
     + reset() : void
 }
-
 
 class Operations {
     <<enumeration>>
@@ -164,13 +157,12 @@ class Operations {
     + GREATER_THAN_EQUALS
     + LESS_THAN_EQUALS
     + CONTAINS
-    - String operator
+    - operator : String
     - Operations(operator : String)
     + getOperator() : String
     + fromOperator(operator : String) : Operations
     + getOperatorFromStr(str : String) : Operations
 }
-
 
 class Planner {
     + Planner(games : Set<BoardGame>)
@@ -179,7 +171,6 @@ class Planner {
     + filter(filter : String, sortOn : GameData, ascending : boolean) : Stream<BoardGame>
     + reset() : void
 }
-
 
 class IGameList {
     <<Interface>>
@@ -192,11 +183,8 @@ class IGameList {
     + removeFromList(str : String) : void
 }
 
-
-
-GameList  ..|>  IGameList : is-a
-Planner  ..|>  IPlanner : is-a
-
+GameList ..> IGameList : implements
+Planner ..> IPlanner : implements
 
 BGArenaPlanner --> IPlanner
 BGArenaPlanner --> IGameList
