@@ -72,7 +72,7 @@ class ConsoleApp {
     - printOutput(String format, Object... output) : void
 }
 
-class ConsoleText <<enumeration>> {
+class ConsoleText {
     <<enumeration>>
     + WELCOME
     + HELP
