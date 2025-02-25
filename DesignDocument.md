@@ -199,15 +199,133 @@ GamesLoader --> BoardGame
 ```
 
 
-
-
-
-
 ### Your Plans/Design
 
 Create a class diagram for the classes you plan to create. This is your initial design, and it is okay if it changes. Your starting points are the interfaces. 
 
+```mermaid
+classDiagram
+class IGameList {
+    <<Interface>>
+    + ADD_ALL : String
+    + getGameNames() : List<String>
+    + clear() : void
+    + count() : int
+    + saveGame(filename : String) : void
+    + addToList(str : String, filtered : Stream<BoardGame>) : void
+    + removeFromList(str : String) : void
+}
 
+class IPlanner {
+    <<Interface>>
+    + filter(filter : String) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData, ascending : boolean) : Stream<BoardGame>
+    + reset() : void
+}
+
+
+class GameList {
+    + GameList()
+    + getGameNames() : List<String>
+    + clear() : void
+    + count() : int
+    + saveGame(filename : String) : void
+    + addToList(str : String, filtered : Stream<BoardGame>) : void
+    + removeFromList(str : String) : void
+}
+
+class Planner {
+    + Planner(games : Set<BoardGame>)
+    + filter(filter : String) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData) : Stream<BoardGame>
+    + filter(filter : String, sortOn : GameData, ascending : boolean) : Stream<BoardGame>
+    + reset() : void
+}
+
+class Filter {
+    + Filter()
+    + parseFilter(filterStr : String) : Map<GameData, String>
+}
+
+
+class BoardGame {
+    - name : String
+    - id : int
+    - minPlayers : int
+    - maxPlayers : int
+    - maxPlayTime : int
+    - minPlayTime : int
+    - difficulty : double
+    - rank : int
+    - averageRating : double
+    - yearPublished : int
+    + getName() : String
+    + getId() : int
+    + getMinPlayers() : int
+    + getMaxPlayers() : int
+    + getMaxPlayTime() : int
+    + getMinPlayTime() : int
+    + getDifficulty() : double
+    + getRank() : int
+    + getRating() : double
+    + getYearPublished() : int
+}
+
+class GameData {
+    <<enumeration>>
+    + NAME
+    + ID
+    + RATING
+    + DIFFICULTY
+    + RANK
+    + MIN_PLAYERS
+    + MAX_PLAYERS
+    + MIN_TIME
+    + MAX_TIME
+    + YEAR
+}
+
+class Operations {
+    <<enumeration>>
+    + EQUALS
+    + NOT_EQUALS
+    + GREATER_THAN
+    + LESS_THAN
+    + GREATER_THAN_EQUALS
+    + LESS_THAN_EQUALS
+    + CONTAINS
+}
+
+%% === 交互层 ===
+class ConsoleApp {
+    - gameList : IGameList
+    - planner : IPlanner
+    + ConsoleApp(gameList : IGameList, planner : IPlanner)
+    + start() : void
+}
+
+class BGArenaPlanner {
+    + main(args : String[]) : void
+}
+
+
+GameList ..> IGameList : implements
+Planner ..> IPlanner : implements
+
+BGArenaPlanner --> IPlanner
+BGArenaPlanner --> IGameList
+BGArenaPlanner --> GamesLoader
+
+ConsoleApp --> IGameList
+ConsoleApp --> IPlanner
+
+Planner --> BoardGame
+Planner --> Filter
+GamesLoader --> BoardGame
+
+
+```
 
 
 
@@ -225,8 +343,15 @@ Write a test (in english) that you can picture for the class diagram you have cr
 
 You should feel free to number your brainstorm. 
 
-1. Test 1..
-2. Test 2..
+1. `BoardGame` attributes should be retrievable correctly.
+2. `BoardGame` objects with the same ID should be equal.
+3. Adding a game to `GameList` should increase its size.
+4. Removing a game from `GameList` should decrease its size.
+5. `GameList` should not allow duplicate games.
+6. `Planner` should correctly filter by `minPlayers`.
+7. `Planner` should correctly filter by `difficulty`.
+8. `GamesLoader` should load games from CSV correctly.
+9. Typing `"list"` in `ConsoleApp` should display all games.
 
 
 
