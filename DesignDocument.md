@@ -13,8 +13,7 @@ Place your class diagrams below. Make sure you check the file in the browser on 
 Provide a class diagram for the provided code as you read through it.  For the classes you are adding, you will create them as a separate diagram, so for now, you can just point towards the interfaces for the provided code diagram.
 
 ```mermaid
-
-
+classDiagram
 class BGArenaPlanner{
     - String DEFAULT_COLLECTION
     - BGArenaPlanner()
@@ -208,7 +207,6 @@ ConsoleApp -- uses --> IPlanner
 
 Planner -- uses --> BoardGame
 GamesLoader -- uses --> BoardGame
-
 
 ```
 
