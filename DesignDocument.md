@@ -166,7 +166,7 @@ class Operations {
     + CONTAINS
     - String operator
     - Operations(operator : String)
-    + getOperator : String
+    + getOperator() : String
     + fromOperator(operator : String) : Operations
     + getOperatorFromStr(str : String) : Operations
 }
@@ -189,7 +189,7 @@ class IGameList {
     + count() : int
     + saveGame(filename : String) : void
     + addToList(str : String, filtered : Stream<BoardGame>) : void
-    + removeFromList (str : String) : void
+    + removeFromList(str : String) : void
 }
 
 
