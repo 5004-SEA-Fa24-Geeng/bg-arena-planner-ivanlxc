@@ -194,8 +194,8 @@ class IGameList {
 
 
 
-GameList  ..>  IGameList : is-a
-Planner  ..>  IPlanner : is-a
+GameList  ..|>  IGameList : is-a
+Planner  ..|>  IPlanner : is-a
 
 
 BGArenaPlanner --> IPlanner
