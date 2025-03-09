@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GameListTest {
 
@@ -36,8 +37,13 @@ public class GameListTest {
     @Test
     void getGameNames() {
         gameList.addToList("all", games.stream());
-        List<String> expectedList = Arrays.asList("17 days", "Chess", "Go", "Go Fish", "golang", "GoRami", "Monopoly", "Tucano");
-        assertEquals(expectedList, gameList.getGameNames());
+
+        List<String> actualGameList = gameList.getGameNames();
+        assertNotNull(actualGameList, "The game list is not null");
+
+        List<String> expectedGameList = Arrays.asList("17 days", "Chess", "Go", "Go Fish", "golang", "GoRami", "Monopoly", "Tucano");
+        assertEquals(8, expectedGameList.size());
+        assertEquals(expectedGameList, actualGameList);
     }
 
 
