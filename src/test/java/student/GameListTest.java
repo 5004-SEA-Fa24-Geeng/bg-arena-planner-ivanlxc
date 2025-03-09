@@ -38,15 +38,21 @@ public class GameListTest {
     void getGameNames() {
         gameList.addToList("all", games.stream());
 
-        List<String> actualGameList = gameList.getGameNames();
-        assertNotNull(actualGameList, "The game list is not null");
+        List<String> gameListNames = gameList.getGameNames();
+        assertNotNull(gameListNames, "The list of game names is not null");
 
-        List<String> expectedGameList = Arrays.asList("17 days", "Chess", "Go", "Go Fish", "golang", "GoRami", "Monopoly", "Tucano");
-        assertEquals(8, expectedGameList.size());
-        assertEquals(expectedGameList, actualGameList);
+        List<String> expectedGameListNames = Arrays.asList("17 days", "Chess", "Go", "Go Fish", "golang", "GoRami", "Monopoly", "Tucano");
+        assertEquals(8, expectedGameListNames.size());
+        assertEquals(expectedGameListNames, gameListNames);
     }
 
-
+    @Test
+    void clear() {
+        gameList.addToList("all", games.stream());
+        assertEquals(9, gameList.count());
+        gameList.clear();
+        assertEquals(0, gameList.count());
+    }
 
 
 
