@@ -54,9 +54,57 @@ public class GameListTest {
         assertEquals(0, gameList.count());
     }
 
+    @Test
+    void count() {
+
+    }
+
+    @Test
+    void testSaveGame() {
+
+    }
+
+    @Test
+    void testAddSingleGameToListByName() {
+
+    }
+
+    @Test
+    void testAddInvalidSingleGameToListByName() {
+
+    }
 
 
 
+    @Test
+    void testAddSingleGameToListByIndex() {
+
+    }
+
+
+    @Test
+    void testAddInvalidSingleGameToListByIndex() {
+
+    }
+
+
+
+    @Test
+    void testAddRangeOfGamesToList() {
+
+    }
+
+
+    @Test
+    void testAddInvalidRangeOfGamesToList() {
+
+    }
+
+
+    @Test
+    void testAddAllGamesToList() {
+
+    }
 
 
 
