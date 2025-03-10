@@ -124,6 +124,20 @@ public final class Filter {
             case NOT_EQUALS:
                 // Name not equals (case-insensitive)
                 return games.filter(g -> !getStringVal(g, column).equalsIgnoreCase(v));
+
+            case GREATER_THAN:
+                // Name lexicographically greater than (case-insensitive)
+                return games.filter(g -> getStringVal(g, column).compareToIgnoreCase(v) > 0);
+            case GREATER_THAN_EQUALS:
+                // Name lexicographically greater than or equal to (case-insensitive)
+                return games.filter(g -> getStringVal(g, column).compareToIgnoreCase(v) >= 0);
+            case LESS_THAN:
+                // Name lexicographically less than (case-insensitive)
+                return games.filter(g -> getStringVal(g, column).compareToIgnoreCase(v) < 0);
+            case LESS_THAN_EQUALS:
+                // Name lexicographically less than or equal to (case-insensitive)
+                return games.filter(g -> getStringVal(g, column).compareToIgnoreCase(v) <= 0);
+
             default:
                 return games;
         }
