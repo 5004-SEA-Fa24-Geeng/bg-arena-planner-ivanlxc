@@ -17,10 +17,10 @@ public class Planner implements IPlanner {
      */
     private final Set<BoardGame> allGames;
 
-    /**
-     * A list that holds the currently filtered set of board games.
-     */
-    private List<BoardGame> current;
+//    /**
+//     * A list that holds the currently filtered set of board games.
+//     */
+//    private List<BoardGame> current;
 
 
     /**
@@ -30,7 +30,7 @@ public class Planner implements IPlanner {
     public Planner(Set<BoardGame> games) {
         this.allGames = games;
         // Initially, no filters are applied, so current includes all games
-        this.current = new ArrayList<>(allGames);
+//        this.current = new ArrayList<>(allGames);
     }
 
 
@@ -72,8 +72,12 @@ public class Planner implements IPlanner {
      */
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
-        // Start from current filtered list
-        Stream<BoardGame> tempStream = current.stream();
+//        // Start from current filtered list
+//        Stream<BoardGame> tempStream = current.stream();
+
+        // Always start from the full set for each filter call
+        Stream<BoardGame> tempStream = allGames.stream();
+
         // Apply the text-based filter
         tempStream = Filter.applyFilter(tempStream, filter);
         // Then sort the resulting stream by the specified column and order
@@ -88,7 +92,5 @@ public class Planner implements IPlanner {
      * Resets the list of BoardGame objects back to the full unfiltered set.
      */
     @Override
-    public void reset() {
-        current = new ArrayList<>(allGames);
-    }
+    public void reset() { }
 }
