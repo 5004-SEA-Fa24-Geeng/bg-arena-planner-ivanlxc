@@ -3,51 +3,48 @@ package student;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-
 /**
- * A utility class for sorting a stream of BoardGame objects based on a specific column.
- * The class provides a static method which sorts the stream either in ascending
- *  or descending order, according to the specified GameData.
+ * Utility class for sorting a stream of BoardGame objects based on a specific column.
+ * Provides a method to sort in ascending or descending order according to the specified GameData.
  */
 public final class Sorting {
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
+    /** Private constructor to prevent instantiation. */
     private Sorting() { }
 
     /**
-     * Sorts the given stream of BoardGame objects based on the specified
-     * sortOn column in either ascending or descending order.
+     * Sorts the given stream of BoardGame objects based on the specified sortOn column,
+     * in either ascending or descending order. Ties are broken by name to ensure stable ordering.
      *
      * @param games     the stream of BoardGame objects to sort.
      * @param sortOn    the GameData column to sort by.
-     * @param ascending if true, the sorting is in ascending order; otherwise descending.
-     * @return a Stream<BoardGame> sorted based on the specified column and order.
+     * @param ascending if true, sort in ascending order; if false, sort in descending order.
+     * @return a Stream<BoardGame> sorted by the specified column (and name for ties).
      */
     public static Stream<BoardGame> sort(Stream<BoardGame> games, GameData sortOn, boolean ascending) {
-        // Get a comparator based on the desired column
-        Comparator<BoardGame> comparator = getComparator(sortOn);
-        // Use a secondary comparator to maintain stable ordering
-        Comparator<BoardGame> stableComparator = comparator.thenComparing(bg -> bg.getName());
-        // Reverse the comparator if descending order is requested
-        if (!ascending) {
-            comparator = comparator.reversed();
-        }
-        // Sort the stream using the stable comparator
-        return games.sorted(stableComparator);
-    }
+        // Base comparator for the primary sort key
+        Comparator<BoardGame> primaryComparator = getComparator(sortOn);
+        // Secondary comparator for tie-breaking by name (case-insensitive)
+        Comparator<BoardGame> nameComparator = Comparator.comparing(bg -> bg.getName().toLowerCase());
 
+        // Combine comparators: apply primary, then name as secondary for stable ordering
+        Comparator<BoardGame> finalComparator = ascending
+                ? primaryComparator.thenComparing(nameComparator)
+                : primaryComparator.reversed().thenComparing(nameComparator);
+
+        return games.sorted(finalComparator);
+    }
 
     /**
      * Returns a Comparator for the specified GameData column.
-     * If the column is not recognized, it defaults to comparing by name in a case-insensitive manner.
+     * If the column is not recognized, it defaults to comparing by name (case-insensitive).
+     *
      * @param sortOn the GameData indicating which field to compare.
-     * @return a Comparator for the specified field.
+     * @return a Comparator<BoardGame> for the specified field.
      */
     private static Comparator<BoardGame> getComparator(GameData sortOn) {
         switch (sortOn) {
             case NAME:
-                // Compare board games by name ignoring case
+                // Compare by name, ignoring case
                 return Comparator.comparing(bg -> bg.getName().toLowerCase());
             case RATING:
                 return Comparator.comparingDouble(BoardGame::getRating);
@@ -66,7 +63,7 @@ public final class Sorting {
             case YEAR:
                 return Comparator.comparingInt(BoardGame::getYearPublished);
             default:
-                // Fallback to name-based comparison
+                // Fallback to name-based comparison if sortOn is unrecognized
                 return Comparator.comparing(bg -> bg.getName().toLowerCase());
         }
     }

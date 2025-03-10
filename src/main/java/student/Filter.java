@@ -2,7 +2,6 @@ package student;
 
 import java.util.stream.Stream;
 
-
 /**
  * Utility class for filtering a Stream of objects based on a textual filter.
  * If the filter is empty or null, the original stream is returned without any changes.
@@ -25,10 +24,11 @@ public final class Filter {
             return games;
         }
 
-        // Remove all whitespaces, then split by comma
-        String[] conditions = filterString.replaceAll("\\s", "").split(",");
+        // Split by comma and trim each condition (preserve internal spaces in values)
+        String[] conditions = filterString.split(",");
         Stream<BoardGame> result = games;
         for (String condition : conditions) {
+            condition = condition.trim();
             result = filterSingle(result, condition);
         }
         return result;
@@ -44,36 +44,35 @@ public final class Filter {
      * @return a new Stream<BoardGame> with the condition applied.
      */
     private static Stream<BoardGame> filterSingle(Stream<BoardGame> games, String condition) {
-        // Identify the operator
+        // Identify the operator in the condition string
         Operations op = Operations.getOperatorFromStr(condition);
         if (op == null) {
             // If no valid operator is found, return the stream as is
             return games;
         }
 
-        // Split by the operator substring
+        // Split the condition into left and right parts around the operator
         String[] parts = condition.split(op.getOperator());
         if (parts.length != 2) {
-            // Invalid format, return the stream
+            // Invalid format, return the stream unchanged
             return games;
         }
-        String left = parts[0];
-        String right = parts[1];
+        String left = parts[0].trim();
+        String right = parts[1].trim();
 
-        // Parse the column, ignoring 'id' since ID is not a filtering criteria
+        // Determine the column to filter on, ignoring 'ID' (not a valid filter criterion)
         GameData column;
         try {
             column = GameData.fromString(left);
-
             if (column == GameData.ID) {
                 return games;
             }
         } catch (Exception e) {
-            // If the column is unrecognized, return the stream
+            // If the column name is unrecognized, skip this filter
             return games;
         }
 
-        // Choose filter behavior based on the column type
+        // Apply the appropriate filtering based on the column's data type
         switch (column) {
             case NAME:
                 return stringFilter(games, column, op, right);
@@ -92,7 +91,6 @@ public final class Filter {
             case MIN_TIME:
             case MAX_TIME:
             case YEAR:
-
                 // Integer-based filter
                 try {
                     int val = Integer.parseInt(right);
@@ -105,13 +103,12 @@ public final class Filter {
         }
     }
 
-
     /**
-     * Applies a string-based filter to the stream.
-     * @param games the stream of games.
-     * @param column the GameData enum specifying the column.
-     * @param op the parsed operator from Operations class.
-     * @param value the string value to match.
+     * Applies a string-based filter to the stream (e.g., filtering by name).
+     * @param games   the stream of games.
+     * @param column  the GameData enum specifying the column (expected to be NAME).
+     * @param op      the parsed operator from Operations class.
+     * @param value   the string value to match against.
      * @return a filtered stream based on the string matching rules.
      */
     private static Stream<BoardGame> stringFilter(Stream<BoardGame> games, GameData column,
@@ -119,23 +116,25 @@ public final class Filter {
         final String v = value.toLowerCase();
         switch (op) {
             case CONTAINS:
+                // Name contains (case-insensitive)
                 return games.filter(g -> getStringVal(g, column).toLowerCase().contains(v));
             case EQUALS:
+                // Name equals (case-insensitive)
                 return games.filter(g -> getStringVal(g, column).equalsIgnoreCase(v));
             case NOT_EQUALS:
+                // Name not equals (case-insensitive)
                 return games.filter(g -> !getStringVal(g, column).equalsIgnoreCase(v));
             default:
                 return games;
         }
     }
 
-
     /**
      * Applies an integer-based filter to the stream.
-     * @param games the stream of games.
-     * @param column the GameData enum specifying which int column to compare.
-     * @param op the parsed operator from Operations class.
-     * @param value the integer value used in comparison.
+     * @param games   the stream of games.
+     * @param column  the GameData enum specifying which int field to compare.
+     * @param op      the parsed operator from Operations class.
+     * @param value   the integer value used in comparison.
      * @return a filtered stream based on the integer comparison rules.
      */
     private static Stream<BoardGame> intFilter(Stream<BoardGame> games, GameData column,
@@ -158,13 +157,12 @@ public final class Filter {
         }
     }
 
-
     /**
-     * Applies a double-based filter to the stream (e.g., rating, difficulty).
-     * @param games the stream of games.
-     * @param column the GameData enum specifying which double column to compare.
-     * @param op the parsed operator from Operations class.
-     * @param value the double value used in comparison.
+     * Applies a double-based filter to the stream (e.g., rating or difficulty).
+     * @param games   the stream of games.
+     * @param column  the GameData enum specifying which double field to compare.
+     * @param op      the parsed operator from Operations class.
+     * @param value   the double value used in comparison.
      * @return a filtered stream based on the double comparison rules.
      */
     private static Stream<BoardGame> doubleFilter(Stream<BoardGame> games, GameData column,
@@ -179,6 +177,7 @@ public final class Filter {
             case LESS_THAN_EQUALS:
                 return games.filter(g -> getDoubleVal(g, column) <= value);
             case EQUALS:
+                // Use a small tolerance for double equality comparisons
                 return games.filter(g -> Math.abs(getDoubleVal(g, column) - value) < 1e-9);
             case NOT_EQUALS:
                 return games.filter(g -> Math.abs(getDoubleVal(g, column) - value) > 1e-9);
@@ -187,25 +186,17 @@ public final class Filter {
         }
     }
 
-
     /**
-     * Helper method to extract a string-based column value from a BoardGame.
-     * @param game the BoardGame object.
-     * @param col the column to retrieve.
-     * @return the string value of the specified column (the game's name).
+     * Helper to extract a string-based column value from a BoardGame (currently only name).
      */
     private static String getStringVal(BoardGame game, GameData col) {
-        // Currently only name is handled as a string
+        // Only the NAME field is string-based in this context
         return game.getName();
     }
 
-
     /**
-     * Helper method to extract an integer-based column value from a BoardGame.
-     * Potential columns include rank, minPlayers, maxPlayers, minTime, maxTime, year.
-     * @param game the BoardGame object.
-     * @param col the column to retrieve.
-     * @return the integer value for the specified column, or 0 if not matched.
+     * Helper to extract an integer-based column value from a BoardGame.
+     * Potential int fields: rank, minPlayers, maxPlayers, minTime, maxTime, year.
      */
     private static int getIntVal(BoardGame game, GameData col) {
         switch (col) {
@@ -226,13 +217,9 @@ public final class Filter {
         }
     }
 
-
     /**
-     * Helper method to extract a double-based column value from a BoardGame.
-     * Potential columns include rating, difficulty.
-     * @param game the BoardGame object.
-     * @param col the column to retrieve.
-     * @return the double value for the specified column, or 0.0 if not matched.
+     * Helper to extract a double-based column value from a BoardGame.
+     * Potential double fields: rating, difficulty.
      */
     private static double getDoubleVal(BoardGame game, GameData col) {
         switch (col) {
@@ -245,4 +232,3 @@ public final class Filter {
         }
     }
 }
-
