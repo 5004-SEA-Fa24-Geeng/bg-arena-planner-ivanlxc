@@ -13,7 +13,7 @@ public final class Sorting {
     /**
      * Private constructor to prevent instantiation of this utility class.
      */
-    private Sorting() {}
+    private Sorting() { }
 
     /**
      * Sorts the given stream of BoardGame objects based on the specified

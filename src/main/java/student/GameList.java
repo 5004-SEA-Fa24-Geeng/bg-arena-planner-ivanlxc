@@ -52,7 +52,7 @@ public class GameList implements IGameList {
     }
 
     /**
-     * Counts for the number of games in the list
+     * Counts for the number of games in the list.
      * @return the total number of game names in the list.
      */
     @Override

@@ -11,7 +11,7 @@ public final class Filter {
     /**
      * Private constructor to prevent instantiation of this utility class.
      */
-    private Filter() {}
+    private Filter() { }
 
     /**
      * Splits the given filterString by commas and applies each condition
