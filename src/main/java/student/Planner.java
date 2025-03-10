@@ -83,7 +83,7 @@ public class Planner implements IPlanner {
 
         // Sort and store the results
         tempStream = Sorting.sort(tempStream, sortOn, ascending);
-        current = tempStream.collect(Collectors.toSet());
+        current = tempStream.collect(Collectors.toCollection(LinkedHashSet::new));
         return current.stream();
     }
 
