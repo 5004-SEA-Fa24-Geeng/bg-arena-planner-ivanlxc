@@ -27,12 +27,14 @@ public final class Sorting {
     public static Stream<BoardGame> sort(Stream<BoardGame> games, GameData sortOn, boolean ascending) {
         // Get a comparator based on the desired column
         Comparator<BoardGame> comparator = getComparator(sortOn);
+        // Use a secondary comparator to maintain stable ordering
+        Comparator<BoardGame> stableComparator = comparator.thenComparing(bg -> bg.getName());
         // Reverse the comparator if descending order is requested
         if (!ascending) {
             comparator = comparator.reversed();
         }
-        // Sort the stream using the comparator
-        return games.sorted(comparator);
+        // Sort the stream using the stable comparator
+        return games.sorted(stableComparator);
     }
 
 
