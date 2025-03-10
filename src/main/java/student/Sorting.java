@@ -46,7 +46,7 @@ public final class Sorting {
         switch (sortOn) {
             case NAME:
                 // Compare board games by name ignoring case
-                return Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER);
+                return Comparator.comparing(bg -> bg.getName().toLowerCase());
             case RATING:
                 return Comparator.comparingDouble(BoardGame::getRating);
             case DIFFICULTY:
@@ -65,7 +65,7 @@ public final class Sorting {
                 return Comparator.comparingInt(BoardGame::getYearPublished);
             default:
                 // Fallback to name-based comparison
-                return Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER);
+                return Comparator.comparing(bg -> bg.getName().toLowerCase());
         }
     }
 }
