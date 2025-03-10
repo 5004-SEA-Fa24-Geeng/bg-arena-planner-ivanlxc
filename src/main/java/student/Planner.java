@@ -2,8 +2,6 @@ package student;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,9 +28,8 @@ public class Planner implements IPlanner {
      * @param games the full set of board games to manage and filter.
      */
     public Planner(Set<BoardGame> games) {
-        // Initialize original and current game collections
+        // We'll store all games in originalGames
         this.originalGames = new LinkedHashSet<>(games);
-        this.currentGames = new LinkedHashSet<>(games);
     }
 
 
@@ -69,44 +66,30 @@ public class Planner implements IPlanner {
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
-        // if filter is null or empty => no new filter, just sort
         if (filter == null || filter.trim().isEmpty()) {
-            return sortAndReturn(sortOn, ascending);
+            // no filter -> just sort entire originalGames
+            return sortAndReturn(originalGames.stream(), sortOn, ascending);
         }
 
-        // apply the filter to currentGames
-        // (your Filter class uses applyFilter to handle multi-condition)
-        Stream<BoardGame> filteredStream = Filter.applyFilter(currentGames.stream(), filter);
+        // 1) Start from ALL games, ignoring previous filters
+        Stream<BoardGame> filteredStream = Filter.applyFilter(originalGames.stream(), filter);
 
-        // collect it back into currentGames for cumulative effect
-        currentGames = filteredStream.collect(Collectors.toCollection(LinkedHashSet::new));
-
-        // then sort, collect, and return
-        return sortAndReturn(sortOn, ascending);
+        // 2) Sort the filtered result
+        return sortAndReturn(filteredStream, sortOn, ascending);
     }
 
     /**
      * Resets the list of BoardGame objects back to the full unfiltered set.
      */
     @Override
-    public void reset() {
-        // Restore the currentGames to the full original set (no filters)
-        currentGames = new HashSet<>(originalGames);
+    public void reset() { }
+
+
+
+    private Stream<BoardGame> sortAndReturn(Stream<BoardGame> input, GameData col, boolean ascending) {
+        // Use your Sorting class
+        Stream<BoardGame> sorted = Sorting.sort(input, col, ascending);
+        // Just return sorted (no need to store anywhere if non-progressive)
+        return sorted;
     }
-
-
-
-
-    private Stream<BoardGame> sortAndReturn(GameData sortOn, boolean ascending) {
-        // If your Sorting class has a method sort(Stream<BoardGame>, GameData, boolean)
-        // we can do:
-        Stream<BoardGame> sorted = Sorting.sort(currentGames.stream(), sortOn, ascending);
-
-        // collect back into currentGames if you want to preserve that order
-        currentGames = sorted.collect(Collectors.toCollection(LinkedHashSet::new));
-
-        // finally return them as a stream
-        return currentGames.stream();
-    }
-
 }
