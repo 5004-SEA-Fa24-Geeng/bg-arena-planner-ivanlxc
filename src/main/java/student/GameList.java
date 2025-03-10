@@ -77,7 +77,8 @@ public class GameList implements IGameList {
      *
      * @param str      the selection string (name, index, range, or "all").
      * @param filtered the filtered Stream of BoardGame objects from which to pick names.
-     * @throws IllegalArgumentException if the input is null/empty, an invalid range/index, or no matching game is found.
+     * @throws IllegalArgumentException if the input is null/empty, an invalid range/index,
+     * or no matching game is found.
      */
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {

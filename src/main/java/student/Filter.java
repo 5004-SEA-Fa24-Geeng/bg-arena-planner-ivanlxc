@@ -186,8 +186,13 @@ public final class Filter {
         }
     }
 
+
     /**
      * Helper to extract a string-based column value from a BoardGame (currently only name).
+     * @param game the BoardGame object from which to retrieve the value.
+     * @param col the GameData column to extract (should be NAME).
+     * @return the string value of the specified column, or an empty
+     * string if the column is not NAME.
      */
     private static String getStringVal(BoardGame game, GameData col) {
         // Only the NAME field is string-based in this context
@@ -197,6 +202,9 @@ public final class Filter {
     /**
      * Helper to extract an integer-based column value from a BoardGame.
      * Potential int fields: rank, minPlayers, maxPlayers, minTime, maxTime, year.
+     * @param game the BoardGame object from which to retrieve the value.
+     * @param col the GameData column to extract.
+     * @return the integer value of the specified column, or 0 if the column is not an integer field.
      */
     private static int getIntVal(BoardGame game, GameData col) {
         switch (col) {
@@ -220,6 +228,9 @@ public final class Filter {
     /**
      * Helper to extract a double-based column value from a BoardGame.
      * Potential double fields: rating, difficulty.
+     * @param game the BoardGame object from which to retrieve the value.
+     * @param col the GameData column to extract.
+     * @return the double value of the specified column, or 0.0 if the column is not a double field.
      */
     private static double getDoubleVal(BoardGame game, GameData col) {
         switch (col) {
