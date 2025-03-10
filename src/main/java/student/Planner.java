@@ -1,6 +1,8 @@
 package student;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,14 +15,14 @@ import java.util.stream.Stream;
  */
 public class Planner implements IPlanner {
     /**
-     * The original board games.
+     * The complete set of all available board games.
      */
-    private final Set<BoardGame> originalGames;
+    private final Set<BoardGame> allGames;
 
     /**
-     * The current filtered board games.
+     * A set that holds the currently filtered set of board games.
      */
-    private Set<BoardGame> currentGames;
+    private Set<BoardGame> current;
 
 
     /**
@@ -28,8 +30,9 @@ public class Planner implements IPlanner {
      * @param games the full set of board games to manage and filter.
      */
     public Planner(Set<BoardGame> games) {
-        // We'll store all games in originalGames
-        this.originalGames = new LinkedHashSet<>(games);
+        this.allGames = games;
+        // Initially, no filters are applied, so current includes all games
+        this.current = new HashSet<>();
     }
 
 
@@ -42,7 +45,6 @@ public class Planner implements IPlanner {
      */
     @Override
     public Stream<BoardGame> filter(String filter) {
-        // Default sort by name (ascending) if no sort criteria provided
         return filter(filter, GameData.NAME, true);
     }
 
@@ -57,39 +59,43 @@ public class Planner implements IPlanner {
      */
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
-        // Default to ascending order if sort order not provided
         return filter(filter, sortOn, true);
     }
 
 
-
-
+    /**
+     * Filters the current list of BoardGame objects using the given filter string,
+     * then sorts by the specified column in either ascending or descending order,
+     * depending on ascending.
+     * @param filter The filter to apply to the board games.
+     * @param sortOn The column to sort the results on.
+     * @param ascending Whether to sort the results in ascending order or descending order.
+     * @return a stream of the newly filtered and sorted board games.
+     */
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
+        // Always start from allGames (non-progressive)
+        Stream<BoardGame> tempStream = allGames.stream();
+
+        // If filter is empty, just sort and return
         if (filter == null || filter.trim().isEmpty()) {
-            // no filter -> just sort entire originalGames
-            return sortAndReturn(originalGames.stream(), sortOn, ascending);
+            return Sorting.sort(tempStream, sortOn, ascending);
         }
 
-        // 1) Start from ALL games, ignoring previous filters
-        Stream<BoardGame> filteredStream = Filter.applyFilter(originalGames.stream(), filter);
+        // Apply filters using Filter class
+        tempStream = Filter.applyFilter(tempStream, filter);
 
-        // 2) Sort the filtered result
-        return sortAndReturn(filteredStream, sortOn, ascending);
+        // Sort and store the results
+        tempStream = Sorting.sort(tempStream, sortOn, ascending);
+        current = tempStream.collect(Collectors.toSet());
+        return current.stream();
     }
 
     /**
-     * Resets the list of BoardGame objects back to the full unfiltered set.
+     * Resets the set of BoardGame objects back to the full unfiltered set.
      */
     @Override
-    public void reset() { }
-
-
-
-    private Stream<BoardGame> sortAndReturn(Stream<BoardGame> input, GameData col, boolean ascending) {
-        // Use your Sorting class
-        Stream<BoardGame> sorted = Sorting.sort(input, col, ascending);
-        // Just return sorted (no need to store anywhere if non-progressive)
-        return sorted;
+    public void reset() {
+        current = new HashSet<>();
     }
 }
