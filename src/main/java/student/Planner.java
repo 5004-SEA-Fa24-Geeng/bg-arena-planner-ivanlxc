@@ -1,9 +1,6 @@
 package student;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,8 +28,7 @@ public class Planner implements IPlanner {
      */
     public Planner(Set<BoardGame> games) {
         this.allGames = games;
-        // Initially, no filters are applied, so current includes all games
-        this.current = new HashSet<>();
+        this.current = new LinkedHashSet<>();
     }
 
 
@@ -96,6 +92,6 @@ public class Planner implements IPlanner {
      */
     @Override
     public void reset() {
-        current = new HashSet<>();
+        current = new LinkedHashSet<>();
     }
 }
