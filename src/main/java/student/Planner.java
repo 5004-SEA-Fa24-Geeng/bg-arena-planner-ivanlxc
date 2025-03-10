@@ -78,10 +78,10 @@ public class Planner implements IPlanner {
         tempStream = Filter.applyFilter(tempStream, filter);
         // Then sort the resulting stream by the specified column and order
         tempStream = Sorting.sort(tempStream, sortOn, ascending);
-        // Convert the stream back to a list to store in 'current'
-        current = tempStream.toList();
+//        // Convert the stream back to a list to store in 'current'
+//        current = tempStream.toList();
         // Return a new stream based on the updated list
-        return current.stream();
+        return tempStream;
     }
 
     /**
